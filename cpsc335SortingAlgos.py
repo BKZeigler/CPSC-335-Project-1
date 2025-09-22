@@ -1,6 +1,9 @@
 from typing import List, Dict, Tuple
 import time
 import random
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.animation as animation
 
 def bubble_sort(arr):   #Define a bubble sort function that takes a list as an input
 
@@ -257,8 +260,10 @@ def bucket_sort(arr: List[float]) -> List[float]:
 
     buckets = [[] for _ in range (n)]
 
+    max_val = max(arr) # test
     for x in arr:
-        idx = int(n * x)
+        idx = int((x / (max_val + 1)) * n)
+        #idx = int(n * x)
         buckets[idx].append(x)
 
     for i in range(n):
@@ -284,6 +289,13 @@ def partition(arr: List[int], low: int, high: int) -> int:
     arr[i], arr[high] = arr[high], arr[i]
     return i
 
+def pre_quick_select(arr):
+        if arr:
+            k = len(arr) // 2
+        else:
+            return arr
+        return quick_select(arr, 0, len(arr) - 1, k)
+
 def quick_select(arr: List[int], low: int, high: int, k: int) -> int:
     #Recursive Quick Select
 
@@ -303,3 +315,33 @@ def timed_quick_select(arr: List[int], k: int) -> int:
     end = time.perf_counter()
     print(f"[Quick Select] found k={k} in {end-start:.6f} sec")
     return result
+
+
+fig, axes = plt.subplots()
+algos_names = ["Bucket", "Quick Select"] #"Bubble", "Counting", "Heap", "Insertion", "Merge", "Quick", "Radix",
+algos_sort = [bucket_sort, pre_quick_select]
+algos_times = []
+numbers = [random.randint(0,100) for a in range(10)]
+axes.set_xlabel("Sorting Algorithims")
+axes.set_ylabel("Execution Time")
+axes.set_title("Sorting Algorithim Performance")
+
+for algo in algos_sort:
+    numbers_copy = numbers.copy()
+    start = time.time()
+    algo(numbers_copy)
+    end = time.time()
+    algos_times.append(end - start)
+
+print("names:", algos_names)
+print("times:", algos_times)
+
+bars = axes.bar(algos_names, algos_times)
+
+def update(frame):
+    for bar, height in zip(bars, np.array(algos_times) * frame / 20):
+        bar.set_height(height)
+    return bars
+
+bar_animation = animation.FuncAnimation(fig, update, frames=20, interval=100, repeat=False)  #21 150
+plt.show()
