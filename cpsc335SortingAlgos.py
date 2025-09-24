@@ -6,34 +6,46 @@ import numpy as np
 import matplotlib.animation as animation
 
 def bubble_sort(arr):   #Define a bubble sort function that takes a list as an input
-
+	"""Sorts a list using the Bubble Sort algorithm"""
     n = len(arr)
 
+	#iterate the nested loop enough times for it to sort the smallest element, if needed
     for i in range(n):
+		#flag that determines if further sorting is necessary
         swapped = False
 
+		#shifts the greatest unsorted element to its proper place on the list
+		#ex. the 2nd greatest element is shifted to the 2nd-to-last index
         for j in range(0, n - i - 1):
             if arr[j] > arr[j + 1]:
                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
                 swapped = True
+        
+        #no need to sort further
         if not swapped:
             break
+    
     return arr
 
 def counting_sort(arr):   #will only work with non-negative integers
-
+	"""Sorts a list of nonnegative integers using the Counting Sort algorithm"""
+	#checks for empty list
     if not arr:
         return []
     
+    #find the number of possible values for the elements in given list
     max_val = max(arr)
     min_val = min(arr)
     #offset = -min_val if min_val < 0 else 0
     k = max_val - min_val + 1
 
+	#list of integers representing the frequency of each possible value
+	#index 0 represents the minimum value in the list, index 1 represents minimum value + 1, and so on
     count = [0] * k
     for num in arr:
         count[num - min_val] += 1
 
+	#sorted list created using the indexes and elements of count[]
     output = []
     for i, freq in enumerate(count):
         value = i + min_val
@@ -43,7 +55,7 @@ def counting_sort(arr):   #will only work with non-negative integers
 
 def heap_sort(arr):
 #Heap sort would be in place as worst case effiecency with 0(n log n)
-    
+    """Sorts a list using the Heap Sort algorithm"""
     def sift_down(a, start, end):
         root = start
         while (left := 2 * root + 1) <= end:
@@ -71,6 +83,7 @@ def heap_sort(arr):
     return a
 
 def insertion_sort(arr):
+	"""Sorts a list using the Insertion Sort algorithm"""
     n = len(arr)
 
     for  i in range(1, n):   #starts with second element in given array
@@ -86,7 +99,8 @@ def insertion_sort(arr):
 
 #Merge Sort
 def merge_sort(arr):
-
+	"""Sorts a list using the Merge Sort algorithm"""
+	
     if len(arr) <= 1:
         return arr
     
@@ -114,7 +128,8 @@ def merge(left, right):
 
 
 def quick_sort(arr):
-
+	"""Sorts a list using the Quick Sort algorithm"""
+	
     def partition(low, high):
         pivot = arr[(low + high) // 2]
         i = low
@@ -141,6 +156,7 @@ def quick_sort(arr):
 # Core: stable counting sort by one digit (base would be 10 by default)
 
 def _counting_sort_by_digit(a: List[int], exp: int, base: int = 10) -> None:
+	"""Sorts an array using the Counting Sort by Digit algorithm"""
     n = len(a)
     output = [0] * n
     count = [0] * base
@@ -251,7 +267,7 @@ def sort_orders_by_id(orders: List[Dict], key: str = "order_id", base: int = 10)
     return sorted_orders
 
 def bucket_sort(arr: List[float]) -> List[float]:
-
+	"""Sorts an array using the Bucket Sort algorithm"""
     n = len(arr)
     if n == 0:
         return arr
@@ -316,7 +332,7 @@ def timed_quick_select(arr: List[int], k: int) -> int:
     print(f"[Quick Select] found k={k} in {end-start:.6f} sec")
     return result
 
-
+#Plot Data
 fig, axes = plt.subplots()
 algos_names = ["Bucket", "Quick Select"] #"Bubble", "Counting", "Heap", "Insertion", "Merge", "Quick", "Radix",
 algos_sort = [bucket_sort, pre_quick_select]
