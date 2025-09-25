@@ -6,12 +6,12 @@ import numpy as np
 import matplotlib.animation as animation
 
 def bubble_sort(arr):   #Define a bubble sort function that takes a list as an input
-	"""Sorts a list using the Bubble Sort algorithm"""
+    """Sorts a list using the Bubble Sort algorithm"""
     n = len(arr)
 
-	#iterate the nested loop enough times for it to sort the smallest element, if needed
+    #iterate the nested loop enough times for it to sort the smallest element, if needed
     for i in range(n):
-		#flag that determines if further sorting is necessary
+        #flag that determines if further sorting is necessary
         swapped = False
 
 		#shifts the greatest unsorted element to its proper place on the list
@@ -28,8 +28,8 @@ def bubble_sort(arr):   #Define a bubble sort function that takes a list as an i
     return arr
 
 def counting_sort(arr):   #will only work with non-negative integers
-	"""Sorts a list of nonnegative integers using the Counting Sort algorithm"""
-	#checks for empty list
+    """Sorts a list of nonnegative integers using the Counting Sort algorithm"""
+    #checks for empty list
     if not arr:
         return []
     
@@ -39,13 +39,13 @@ def counting_sort(arr):   #will only work with non-negative integers
     #offset = -min_val if min_val < 0 else 0
     k = max_val - min_val + 1
 
-	#list of integers representing the frequency of each possible value
-	#index 0 represents the minimum value in the list, index 1 represents minimum value + 1, and so on
+    #list of integers representing the frequency of each possible value
+    #index 0 represents the minimum value in the list, index 1 represents minimum value + 1, and so on
     count = [0] * k
     for num in arr:
         count[num - min_val] += 1
 
-	#sorted list created using the indexes and elements of count[]
+    #sorted list created using the indexes and elements of count[]
     output = []
     for i, freq in enumerate(count):
         value = i + min_val
@@ -83,7 +83,7 @@ def heap_sort(arr):
     return a
 
 def insertion_sort(arr):
-	"""Sorts a list using the Insertion Sort algorithm"""
+    """Sorts a list using the Insertion Sort algorithm"""
     n = len(arr)
 
     for  i in range(1, n):   #starts with second element in given array
@@ -99,8 +99,8 @@ def insertion_sort(arr):
 
 #Merge Sort
 def merge_sort(arr):
-	"""Sorts a list using the Merge Sort algorithm"""
-	
+    """Sorts a list using the Merge Sort algorithm"""
+
     if len(arr) <= 1:
         return arr
     
@@ -128,8 +128,8 @@ def merge(left, right):
 
 
 def quick_sort(arr):
-	"""Sorts a list using the Quick Sort algorithm"""
-	
+    """Sorts a list using the Quick Sort algorithm"""
+
     def partition(low, high):
         pivot = arr[(low + high) // 2]
         i = low
@@ -156,7 +156,7 @@ def quick_sort(arr):
 # Core: stable counting sort by one digit (base would be 10 by default)
 
 def _counting_sort_by_digit(a: List[int], exp: int, base: int = 10) -> None:
-	"""Sorts an array using the Counting Sort by Digit algorithm"""
+    """Sorts an array using the Counting Sort by Digit algorithm"""
     n = len(a)
     output = [0] * n
     count = [0] * base
@@ -189,7 +189,7 @@ def radix_sort_lsd_nonneg(a: List[int], base: int = 10) -> List[int]:
     if not a:
         return a
 
-    start = time.perf_counter() #Starting high resolution timer for benchmarking
+    #start = time.perf_counter() #Starting high resolution timer for benchmarking
 
     max_val = max(a)
     exp = 1
@@ -198,8 +198,8 @@ def radix_sort_lsd_nonneg(a: List[int], base: int = 10) -> List[int]:
         _counting_sort_by_digit(a, exp, base)
         exp *= base
 
-    end = time.perf_counter()
-    print(f"[Radix] nonneg sort in {end - start:.6f} sec base={base}")  #{base={}}
+    #end = time.perf_counter()
+    #print(f"[Radix] nonneg sort in {end - start:.6f} sec base={base}")  #{base={}}
     return a
 
 #Handling negative values
@@ -256,23 +256,23 @@ def sort_orders_by_id(orders: List[Dict], key: str = "order_id", base: int = 10)
     #Run LSD passes
     max_key = max(keys)
     exp = 1
-    start = time.perf_counter()
+    #start = time.perf_counter()
     while max_key // exp > 0:
         stable_pass_with_companion(keys, indx, exp, base)
         exp *= base
-    end = time.perf_counter()
-    print(f"[Radix] order sort in {end - start:.6f} sec for {len(orders)} records")
+    #end = time.perf_counter()
+    #print(f"[Radix] order sort in {end - start:.6f} sec for {len(orders)} records")
 
     sorted_orders = [orders[i] for i in indx]
     return sorted_orders
 
 def bucket_sort(arr: List[float]) -> List[float]:
-	"""Sorts an array using the Bucket Sort algorithm"""
+    """Sorts an array using the Bucket Sort algorithm"""
     n = len(arr)
     if n == 0:
         return arr
 
-    start = time.perf_counter()
+    #start = time.perf_counter()
 
     buckets = [[] for _ in range (n)]
 
@@ -289,8 +289,8 @@ def bucket_sort(arr: List[float]) -> List[float]:
     for b in buckets: 
         result.extend(b)
 
-    end = time.perf_counter()
-    print(f"[Bucket] sort of {n} elements in {end-start:.6f} sec")
+    #end = time.perf_counter()
+    #print(f"[Bucket] sort of {n} elements in {end-start:.6f} sec")
 
     return result
 
@@ -334,20 +334,36 @@ def timed_quick_select(arr: List[int], k: int) -> int:
 
 #Plot Data
 fig, axes = plt.subplots()
-algos_names = ["Bucket", "Quick Select"] #"Bubble", "Counting", "Heap", "Insertion", "Merge", "Quick", "Radix",
-algos_sort = [bucket_sort, pre_quick_select]
+algos_names = ["Bucket", "Quick Select", "Bubble", "Counting", "Heap", "Insertion", "Merge", "Radix"] #"Bubble", "Counting", "Heap", "Insertion", "Merge", "Quick", "Radix",
+algos_sort = [bucket_sort, pre_quick_select, bubble_sort, counting_sort, heap_sort, insertion_sort, merge_sort, radix_sort_lsd_nonneg]
+algos_sort_negative = [bucket_sort, pre_quick_select, bubble_sort, counting_sort, heap_sort, insertion_sort, merge_sort, radix_sort_lsd]
 algos_times = []
+plt.xticks(rotation=45, ha="right")  #Makes the x labels at an angle so no collision
 numbers = [random.randint(0,100) for a in range(10)]
 axes.set_xlabel("Sorting Algorithims")
 axes.set_ylabel("Execution Time")
 axes.set_title("Sorting Algorithim Performance")
 
-for algo in algos_sort:
-    numbers_copy = numbers.copy()
-    start = time.time()
-    algo(numbers_copy)
-    end = time.time()
-    algos_times.append(end - start)
+is_negative = False
+for num in numbers:
+    if num < 0:
+        is_negative = True
+        break
+
+if is_negative == False: #No negative values
+    for algo in algos_sort: #use radix sort for no negatives
+        numbers_copy = numbers.copy()
+        start = time.time()
+        algo(numbers_copy)
+        end = time.time()
+        algos_times.append(end - start)
+else: #There are negative values
+    for algo in algos_sort_negative: #use radix sort for negatives
+        numbers_copy = numbers.copy()
+        start = time.time()
+        algo(numbers_copy)
+        end = time.time()
+        algos_times.append(end - start)
 
 print("names:", algos_names)
 print("times:", algos_times)
@@ -359,5 +375,5 @@ def update(frame):
         bar.set_height(height)
     return bars
 
-bar_animation = animation.FuncAnimation(fig, update, frames=20, interval=100, repeat=False)  #21 150
+bar_animation = animation.FuncAnimation(fig, update, frames=20, interval=100, repeat=False)
 plt.show()
