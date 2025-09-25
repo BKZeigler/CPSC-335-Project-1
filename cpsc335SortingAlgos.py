@@ -4,6 +4,7 @@ import random
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.animation as animation
+from matplotlib.widgets import Button
 
 def bubble_sort(arr):   #Define a bubble sort function that takes a list as an input
     """Sorts a list using the Bubble Sort algorithm"""
@@ -339,16 +340,17 @@ algos_sort = [bucket_sort, pre_quick_select, bubble_sort, counting_sort, heap_so
 algos_sort_negative = [bucket_sort, pre_quick_select, bubble_sort, counting_sort, heap_sort, insertion_sort, merge_sort, radix_sort_lsd]
 algos_times = []
 plt.xticks(rotation=45, ha="right")  #Makes the x labels at an angle so no collision
-numbers = [random.randint(0,100) for a in range(10)]
-axes.set_xlabel("Sorting Algorithims")
+plt.subplots_adjust(bottom=0.4)
+numbers = [random.randint(-100,100) for a in range(10)]  #10 random numbers from -100-100
+axes.set_xlabel("Sorting Algorithims") #Titles
 axes.set_ylabel("Execution Time")
 axes.set_title("Sorting Algorithim Performance")
 
 is_negative = False
-for num in numbers:
-    if num < 0:
-        is_negative = True
-        break
+for num in numbers: #for every number in numbers list
+    if num < 0: #if a number is negative
+        is_negative = True #show there is a negative in the list
+        break #exit
 
 if is_negative == False: #No negative values
     for algo in algos_sort: #use radix sort for no negatives
@@ -365,15 +367,50 @@ else: #There are negative values
         end = time.time()
         algos_times.append(end - start)
 
-print("names:", algos_names)
-print("times:", algos_times)
+print("Algorithm Times in Microseconds:") #printing algorithm name next to its respective time
+for name, t in zip(algos_names, algos_times):   #combine the 2 lists to be used as a dictionary
+    print(f"{name}: {t * 1e6:.2f} microseconds")
 
-bars = axes.bar(algos_names, algos_times)
+bars = axes.bar(algos_names, algos_times) #sets x to names and y to times
 
-def update(frame):
+def update(frame): #set bar to this height every update (frame)
     for bar, height in zip(bars, np.array(algos_times) * frame / 20):
         bar.set_height(height)
     return bars
 
-bar_animation = animation.FuncAnimation(fig, update, frames=20, interval=100, repeat=False)
+bar_animation = animation.FuncAnimation(fig, update, frames=20, interval=100, repeat=False) #creates animation
+
+#Start, Reset, Pause Functionality
+def start(event):
+    if bar_animation and bar_animation.event_source:
+        bar_animation.event_source.start() #continues the animation
+
+def pause(event):
+    if bar_animation and bar_animation.event_source:
+        bar_animation.event_source.stop() #stop the current animation
+
+def reset(event):
+    global bar_animation
+    if bar_animation and bar_animation.event_source: #Stop the current animation
+        bar_animation.event_source.stop()
+    for bar in bars:
+        bar.set_height(0) #reset the bars
+    fig.canvas.draw_idle()
+    if bar_animation:
+        bar_animation.frame_seq = bar_animation.new_frame_seq() # reset to frame 0
+
+    bar_animation = animation.FuncAnimation(fig, update, frames=20, interval=100, repeat=False)#Recreate animation
+    bar_animation.event_source.stop()
+
+axes_start = plt.axes([0.3, 0.05, 0.1, 0.075]) #Positioning buttons
+axes_pause = plt.axes([0.45, 0.05, 0.1, 0.075])
+axes_reset = plt.axes([0.6, 0.05, 0.1, 0.075])
+btn_start = Button(axes_start, "Start") #Place buttons and name them
+btn_pause = Button(axes_pause, "Pause")
+btn_reset = Button(axes_reset, "Reset")
+btn_start.on_clicked(start) #when button is clicked, call respective function
+btn_pause.on_clicked(pause)
+btn_reset.on_clicked(reset)
+
+
 plt.show()
