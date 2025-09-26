@@ -62,6 +62,7 @@ def heap_sort(arr):
         while (left := 2 * root + 1) <= end:
             right = left + 1
             largest = root
+            print("left:", left, "right:", right, "largest:", largest, "root:", root)
             if a[left] > a[largest]:
                 largest = left
             if right <= end and a[right] > a[largest]:
@@ -69,17 +70,23 @@ def heap_sort(arr):
             if largest == root:
                 break
             a[root], a[largest] = a[largest], a[root]
+            print(a)
             root = largest
+    
     def build_max_heap(a):
         n = len(a)
         for i in range(n // 2 - 1, -1, -1):
             sift_down(a, i, n - 1)
+            #print("sift_down() at index", i, ":", a)
     
     a = arr
     n = len(a)
     build_max_heap(a)
+    #print("After build_max_heap():", a)
     for end in range(n - 1, 0, -1):
+		#swap 
         a[0], a[end] = a[end], a[0]
+        
         sift_down(a, 0, end - 1)
     return a
 
@@ -87,24 +94,28 @@ def insertion_sort(arr):
     """Sorts a list using the Insertion Sort algorithm"""
     n = len(arr)
 
+	#iterate insertion sort with each element as the "key"
     for  i in range(1, n):   #starts with second element in given array
         key = arr[i]
         j = i - 1
 
-        while j >= 0 and arr[j] > key:   #shifts elements that are greater than the key value
+		#shifts forward all elements greater than the key value
+        while j >= 0 and arr[j] > key:
             arr[j + 1] = arr[j]
             j -= 1
 
+		#reassign stored key value to proper place in list
         arr[j + 1] = key
     return arr
 
 #Merge Sort
 def merge_sort(arr):
     """Sorts a list using the Merge Sort algorithm"""
-
+	#checks for empty or single-item list
     if len(arr) <= 1:
         return arr
     
+    #cuts list into halves
     mid = len(arr) // 2
     left_half = merge_sort(arr[:mid])
     right_half = merge_sort(arr[mid:])
@@ -112,20 +123,23 @@ def merge_sort(arr):
     return merge(left_half, right_half)
 
 def merge(left, right):
-    result = []
-    i = j = 0
+	"""Returns """
+	result = []
+	i = j = 0		#iterators for each half
 
-    while i < len(left) and j < len(right):
-        if left[i] <= right[j]:
-            result.append(left[i])
-            i += 1
-        else:
-            result.append(right[j])
-            j += 1
+	#
+	while i < len(left) and j < len(right):
+		if left[i] <= right[j]:
+			result.append(left[i])
+			i += 1
+		else:
+			result.append(right[j])
+			j += 1
+		print(result)
 
-    result.extend(left[i:])
-    result.extend(right[j:])
-    return result
+	result.extend(left[i:])
+	result.extend(right[j:])
+	return result
 
 
 def quick_sort(arr):
