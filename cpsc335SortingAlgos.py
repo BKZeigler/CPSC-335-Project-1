@@ -108,14 +108,13 @@ def insertion_sort(arr):
         arr[j + 1] = key
     return arr
 
-#Merge Sort
 def merge_sort(arr):
     """Sorts a list using the Merge Sort algorithm"""
-	#checks for empty or single-item list
+	#checks for empty or single-item list; end condition
     if len(arr) <= 1:
         return arr
     
-    #cuts list into halves
+    #recursively cuts list into halves
     mid = len(arr) // 2
     left_half = merge_sort(arr[:mid])
     right_half = merge_sort(arr[mid:])
@@ -127,7 +126,7 @@ def merge(left, right):
 	result = []
 	i = j = 0		#iterators for each half
 
-	#
+	#appends the smallest elements from the left and right to result
 	while i < len(left) and j < len(right):
 		if left[i] <= right[j]:
 			result.append(left[i])
@@ -135,8 +134,8 @@ def merge(left, right):
 		else:
 			result.append(right[j])
 			j += 1
-		#print(result)
 
+	#tacks on remaining (big) elements to result
 	result.extend(left[i:])
 	result.extend(right[j:])
 	return result
@@ -146,18 +145,25 @@ def quick_sort(arr):
     """Sorts a list using the Quick Sort algorithm"""
 
     def partition(low, high):
-        pivot = arr[(low + high) // 2]
+        pivot = arr[(low + high) // 2]		#pivot value set to element in (effectively) middle index
         i = low
         j = high
         while i <= j:
+			#iterate forwards to find a value >= pivot
             while arr[i] < pivot:
                 i += 1
+            
+            #iterate backwards to find a value <= pivot
             while arr[j] > pivot:
                 j -= 1
+            
+            #swaps the elements at indexes i & j such that arr[i] < pivot < arr[j]
             if i <= j:
+                print(arr[i], pivot, arr[j])
                 arr[i], arr[j] = arr[j], arr[i]
                 i += 1
                 j -= 1
+                
         return i, j
     
     def sort(low, high):
@@ -176,12 +182,12 @@ def _counting_sort_by_digit(a: List[int], exp: int, base: int = 10) -> None:
     output = [0] * n
     count = [0] * base
 
-    #1 Count occurances of ths digit among all #'s
+    #1 Count occurances of certain digit over all #'s
     for i in range(n):
         digit = (a[i] // exp) % base
         count[digit] += 1
 
-    #2 Prefix Sums: transform count into ending positions
+    #2 Prefix sums: transform count into ending positions
     for d in range(1, base):
         count[d] += count[d - 1]
 
@@ -192,7 +198,7 @@ def _counting_sort_by_digit(a: List[int], exp: int, base: int = 10) -> None:
         output[pos] = a[i]
         count[digit] -= 1
 
-    #4 Copt back: make this pass's result become the new array for the next digit
+    #4 Copy back: make this pass's result become the new array for the next digit
     for i in range(n):
         a[i] = output[i]
 
@@ -286,22 +292,15 @@ def bucket_sort(arr: List[float]) -> List[float]:
     n = len(arr)
     if n == 0:
         return arr
-    
-    min_val, max_val = min(arr), max(arr)
+
     #start = time.perf_counter()
 
     buckets = [[] for _ in range (n)]
 
-    range_val = max_val - min_val + 1 #avoid errors with negatives
-
     max_val = max(arr) # test
     for x in arr:
         idx = int((x / (max_val + 1)) * n)
-        if idx >= n:
-            idx -= n - 1 #avoid divide by zero
         #idx = int(n * x)
-        if idx < 0:
-            idx = 0
         buckets[idx].append(x)
 
     for i in range(n):
@@ -353,6 +352,7 @@ def timed_quick_select(arr: List[int], k: int) -> int:
     end = time.perf_counter()
     print(f"[Quick Select] found k={k} in {end-start:.6f} sec")
     return result
+
 
 #Plot Data
 fig, axes = plt.subplots()
