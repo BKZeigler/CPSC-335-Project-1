@@ -62,7 +62,7 @@ def heap_sort(arr):
         while (left := 2 * root + 1) <= end:
             right = left + 1
             largest = root
-            print("left:", left, "right:", right, "largest:", largest, "root:", root)
+            #print("left:", left, "right:", right, "largest:", largest, "root:", root)
             if a[left] > a[largest]:
                 largest = left
             if right <= end and a[right] > a[largest]:
@@ -70,7 +70,7 @@ def heap_sort(arr):
             if largest == root:
                 break
             a[root], a[largest] = a[largest], a[root]
-            print(a)
+            #print(a)
             root = largest
     
     def build_max_heap(a):
@@ -135,7 +135,7 @@ def merge(left, right):
 		else:
 			result.append(right[j])
 			j += 1
-		print(result)
+		#print(result)
 
 	result.extend(left[i:])
 	result.extend(right[j:])
@@ -286,15 +286,22 @@ def bucket_sort(arr: List[float]) -> List[float]:
     n = len(arr)
     if n == 0:
         return arr
-
+    
+    min_val, max_val = min(arr), max(arr)
     #start = time.perf_counter()
 
     buckets = [[] for _ in range (n)]
 
+    range_val = max_val - min_val + 1 #avoid errors with negatives
+
     max_val = max(arr) # test
     for x in arr:
         idx = int((x / (max_val + 1)) * n)
+        if idx >= n:
+            idx -= n - 1 #avoid divide by zero
         #idx = int(n * x)
+        if idx < 0:
+            idx = 0
         buckets[idx].append(x)
 
     for i in range(n):
@@ -355,7 +362,14 @@ algos_sort_negative = [bucket_sort, pre_quick_select, bubble_sort, counting_sort
 algos_times = []
 plt.xticks(rotation=45, ha="right")  #Makes the x labels at an angle so no collision
 plt.subplots_adjust(bottom=0.4)
-numbers = [random.randint(-100,100) for a in range(10)]  #10 random numbers from -100-100
+#numbers = [random.randint(-100,100) for a in range(10)]  #10 random numbers from -100-100
+
+choice = input("Enter numbers? (Y/N)")
+if choice == 'Y':
+    numbers = list(map(int, input("Enter comma seperated numbers:").split(","))) #takes out commas
+else:
+    numbers = [random.randint(-100,100) for a in range(10)]
+
 axes.set_xlabel("Sorting Algorithims") #Titles
 axes.set_ylabel("Execution Time")
 axes.set_title("Sorting Algorithim Performance")
@@ -404,17 +418,12 @@ def pause(event):
         bar_animation.event_source.stop() #stop the current animation
 
 def reset(event):
-    global bar_animation
-    if bar_animation and bar_animation.event_source: #Stop the current animation
-        bar_animation.event_source.stop()
     for bar in bars:
         bar.set_height(0) #reset the bars
     fig.canvas.draw_idle()
     if bar_animation:
         bar_animation.frame_seq = bar_animation.new_frame_seq() # reset to frame 0
-
-    bar_animation = animation.FuncAnimation(fig, update, frames=20, interval=100, repeat=False)#Recreate animation
-    bar_animation.event_source.stop()
+        bar_animation.event_source.stop()
 
 axes_start = plt.axes([0.3, 0.05, 0.1, 0.075]) #Positioning buttons
 axes_pause = plt.axes([0.45, 0.05, 0.1, 0.075])
