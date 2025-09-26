@@ -418,12 +418,17 @@ def pause(event):
         bar_animation.event_source.stop() #stop the current animation
 
 def reset(event):
+    global bar_animation
     for bar in bars:
         bar.set_height(0) #reset the bars
     fig.canvas.draw_idle()
     if bar_animation:
         bar_animation.frame_seq = bar_animation.new_frame_seq() # reset to frame 0
-        bar_animation.event_source.stop()
+        if bar_animation.event_source:
+            bar_animation.event_source.stop()
+        else:
+            bar_animation = animation.FuncAnimation(fig, update, frames=20, interval=100, repeat=False)
+
 
 axes_start = plt.axes([0.3, 0.05, 0.1, 0.075]) #Positioning buttons
 axes_pause = plt.axes([0.45, 0.05, 0.1, 0.075])
